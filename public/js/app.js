@@ -1909,12 +1909,6 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TableButtonsComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TableButtonsComponent */ "./resources/js/components/TableButtonsComponent.vue");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 //
 //
 //
@@ -1940,6 +1934,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           return r.address + '<br>' + r.city + '<br>' + r.country + '<br>' + r.postal_code;
         }
       }, {
+        label: 'Owner Name',
+        field: 'owner_name',
+        headerAlign: 'left',
+        align: 'left'
+      }, {
+        label: '# of cars',
+        field: 'cars_count',
+        headerAlign: 'left',
+        align: 'left'
+      }, {
         label: 'Actions',
         headerAlign: 'right',
         align: 'right',
@@ -1954,13 +1958,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   methods: {
     showAddresses: function showAddresses() {
+      var _this = this;
+
       axios.get('/address').then(function (res) {
-        this.rows = res.data.map(function (o) {
-          return _objectSpread(_objectSpread({}, o), {}, {
-            'type': 'address'
-          });
+        _this.rows = res.data.map(function (item) {
+          return {
+            id: item.id,
+            address: item.address,
+            city: item.city,
+            country: item.country,
+            postal_code: item.postal_code,
+            owner_name: item.owner.first_name + ' ' + item.owner.last_name,
+            cars_count: item.cars_count,
+            type: 'address'
+          };
         });
-      }.bind(this));
+      });
     }
   },
   created: function created() {
@@ -2223,15 +2236,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   methods: {
     showOwners: function showOwners() {
+      var _this = this;
+
       axios.get('/owner').then(function (res) {
-        this.rows = res.data.map(function (o) {
+        _this.rows = res.data.map(function (o) {
           return _objectSpread(_objectSpread({}, o), {}, {
             'type': 'owner'
           });
-        }); //TODO: Remove, used it it to see the data in the console
-
-        console.log(this.rows);
-      }.bind(this));
+        });
+      });
     }
   },
   created: function created() {
