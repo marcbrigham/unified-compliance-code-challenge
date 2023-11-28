@@ -34,7 +34,7 @@ export default {
                     align: 'left',
                 },
                 {
-                    label: '# of cars',
+                    label: '# of Cars',
                     field: 'cars_count',
                     headerAlign: 'left',
                     align: 'left',
@@ -64,7 +64,6 @@ export default {
                     postal_code: item.postal_code,
                     owner_name: item.owner.first_name + ' ' + item.owner.last_name,
                     cars_count: item.cars_count,
-                    type: 'address',
                 }));
             });
         }
