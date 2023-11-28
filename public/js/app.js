@@ -2199,6 +2199,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         headerAlign: 'left',
         align: 'left'
       }, {
+        label: '# of Addresses',
+        field: 'addresses_count',
+        headerAlign: 'left',
+        align: 'left'
+      }, {
+        label: '# of Cars',
+        field: 'cars_count',
+        headerAlign: 'left',
+        align: 'left'
+      }, {
         label: 'Actions',
         headerAlign: 'right',
         align: 'right',
@@ -2218,7 +2228,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           return _objectSpread(_objectSpread({}, o), {}, {
             'type': 'owner'
           });
-        });
+        }); //TODO: Remove, used it it to see the data in the console
+
+        console.log(this.rows);
       }.bind(this));
     }
   },
@@ -55580,8 +55592,8 @@ var routes = [{
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /mnt/c/Users/Dave/PhpstormProjects/laravel-code-exercise/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /mnt/c/Users/Dave/PhpstormProjects/laravel-code-exercise/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! E:\unified-compliance-code-challenge\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\unified-compliance-code-challenge\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

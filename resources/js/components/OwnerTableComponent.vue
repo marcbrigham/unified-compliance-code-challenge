@@ -30,11 +30,23 @@ export default {
                     align: 'left'
                 },
                 {
+                    label: '# of Addresses',
+                    field: 'addresses_count',
+                    headerAlign: 'left',
+                    align: 'left',
+                },
+                {
+                    label: '# of Cars',
+                    field: 'cars_count',
+                    headerAlign: 'left',
+                    align: 'left',
+                },
+                {
                     label: 'Actions',
                     headerAlign: 'right',
                     align: 'right',
                     component: TableButtonsComponent
-                }
+                },
             ],
             rows: [],
             page: 1,
@@ -47,6 +59,8 @@ export default {
         showOwners: function () {
             axios.get('/owner').then(function (res) {
                 this.rows = res.data.map(o => ({...o, 'type': 'owner'}));
+                //TODO: Remove, used it it to see the data in the console
+                console.log(this.rows);
             }.bind(this));
         }
     },
