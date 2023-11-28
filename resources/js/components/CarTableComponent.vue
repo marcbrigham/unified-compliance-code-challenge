@@ -36,6 +36,22 @@ export default {
                     align: 'left'
                 },
                 {
+                    label: 'Address',
+                    field: 'address',
+                    headerAlign: 'left',
+                    align: 'left',
+                    interpolate: true,
+                    representedAs: function (r) {
+                        return r.address + '<br>' + r.city + '<br>' + r.country + '<br>' + r.postal_code;
+                    }
+                },
+                {
+                    label: 'Owner Name',
+                    field: 'owner_name',
+                    headerAlign: 'left',
+                    align: 'left'
+                },
+                {
                     label: 'Actions',
                     headerAlign: 'right',
                     align: 'right',
@@ -51,9 +67,19 @@ export default {
     },
     methods: {
         showCars: function () {
-            axios.get('/car').then(function (res) {
-                this.rows = res.data.map(o => ({...o, 'type': 'car'}));
-            }.bind(this));
+            axios.get('/car').then((res) => {
+                this.rows = res.data.map((item) => ({
+                    id: item.id,
+                    make:item.make,
+                    model: item.model,
+                    year: item.year,
+                    city: item.address.city,
+                    country: item.address.country,
+                    postal_code: item.address.postal_code,
+                    address: item.address.address,
+                    owner_name: item.owner.first_name + ' ' + item.owner.last_name,
+                }));
+            });
         }
     },
     created: function () {

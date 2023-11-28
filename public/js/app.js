@@ -1939,7 +1939,7 @@ __webpack_require__.r(__webpack_exports__);
         headerAlign: 'left',
         align: 'left'
       }, {
-        label: '# of cars',
+        label: '# of Cars',
         field: 'cars_count',
         headerAlign: 'left',
         align: 'left'
@@ -1969,8 +1969,7 @@ __webpack_require__.r(__webpack_exports__);
             country: item.country,
             postal_code: item.postal_code,
             owner_name: item.owner.first_name + ' ' + item.owner.last_name,
-            cars_count: item.cars_count,
-            type: 'address'
+            cars_count: item.cars_count
           };
         });
       });
@@ -2074,12 +2073,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TableButtonsComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TableButtonsComponent */ "./resources/js/components/TableButtonsComponent.vue");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 //
 //
 //
@@ -2111,6 +2104,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         headerAlign: 'left',
         align: 'left'
       }, {
+        label: 'Address',
+        field: 'address',
+        headerAlign: 'left',
+        align: 'left',
+        interpolate: true,
+        representedAs: function representedAs(r) {
+          return r.address + '<br>' + r.city + '<br>' + r.country + '<br>' + r.postal_code;
+        }
+      }, {
+        label: 'Owner Name',
+        field: 'owner_name',
+        headerAlign: 'left',
+        align: 'left'
+      }, {
         label: 'Actions',
         headerAlign: 'right',
         align: 'right',
@@ -2125,13 +2132,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   methods: {
     showCars: function showCars() {
+      var _this = this;
+
       axios.get('/car').then(function (res) {
-        this.rows = res.data.map(function (o) {
-          return _objectSpread(_objectSpread({}, o), {}, {
-            'type': 'car'
-          });
+        _this.rows = res.data.map(function (item) {
+          return {
+            id: item.id,
+            make: item.make,
+            model: item.model,
+            year: item.year,
+            city: item.address.city,
+            country: item.address.country,
+            postal_code: item.address.postal_code,
+            address: item.address.address,
+            owner_name: item.owner.first_name + ' ' + item.owner.last_name
+          };
         });
-      }.bind(this));
+      });
     }
   },
   created: function created() {
