@@ -59,8 +59,6 @@ export default {
         showOwners: function () {
             axios.get('/owner').then(function (res) {
                 this.rows = res.data.map(o => ({...o, 'type': 'owner'}));
-                //TODO: Remove, used it it to see the data in the console
-                console.log(this.rows);
             }.bind(this));
         }
     },
