@@ -57,9 +57,9 @@ export default {
     },
     methods: {
         showOwners: function () {
-            axios.get('/owner').then(function (res) {
+            axios.get('/owner').then((res) => {
                 this.rows = res.data.map(o => ({...o, 'type': 'owner'}));
-            }.bind(this));
+            });
         }
     },
     created: function () {
