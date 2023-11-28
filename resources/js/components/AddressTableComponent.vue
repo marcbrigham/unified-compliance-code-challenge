@@ -28,6 +28,18 @@ export default {
                     }
                 },
                 {
+                    label: 'Owner Name',
+                    field: 'owner_name',
+                    headerAlign: 'left',
+                    align: 'left',
+                },
+                {
+                    label: '# of cars',
+                    field: 'cars_count',
+                    headerAlign: 'left',
+                    align: 'left',
+                },
+                {
                     label: 'Actions',
                     headerAlign: 'right',
                     align: 'right',
@@ -43,9 +55,18 @@ export default {
     },
     methods: {
         showAddresses: function () {
-            axios.get('/address').then(function (res) {
-                this.rows = res.data.map(o => ({...o, 'type': 'address'}));
-            }.bind(this));
+            axios.get('/address').then((res) => {
+                this.rows = res.data.map((item) => ({
+                    id: item.id,
+                    address: item.address,
+                    city: item.city,
+                    country: item.country,
+                    postal_code: item.postal_code,
+                    owner_name: item.owner.first_name + ' ' + item.owner.last_name,
+                    cars_count: item.cars_count,
+                    type: 'address',
+                }));
+            });
         }
     },
     created: function () {
