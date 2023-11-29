@@ -14,13 +14,18 @@
             v-model="page"
             type="abbreviated"
         />
+        <car-modal :car="selectedCar" :show-modal="showModal" @close-modal="closeModal"></car-modal>
     </div>
 </template>
 
 <script>
 import TableButtonsComponent from "./TableButtonsComponent";
+import CarModal from "./CarModal.vue";
 
 export default {
+    components: {
+        CarModal,
+    },
     data() {
         return {
             columns: [
@@ -74,7 +79,9 @@ export default {
             page: 1,
             filter:  '',
             perPage: 20,
-            loading: true
+            loading: true,
+            selectedCar: null,
+            showModal: false,
         }
     },
     methods: {
@@ -93,11 +100,15 @@ export default {
                 }));
             });
         },
-        editRow() {
-            console.log(this.rows);
+        editRow(car) {
+            this.selectedCar = car;
+            this.showModal = true;
+            document.body.classList.add('modal-open');
         },
-        viewRow() {
-            console.log(this.rows);
+        viewRow(car) {
+            this.selectedCar = car;
+            this.showModal = true;
+            document.body.classList.add('modal-open');
         },
         deleteRow(rows) {
             const response = confirm("Are you sure you want to delete?");
@@ -105,7 +116,11 @@ export default {
             if (rowIndex !== -1 && response) {
                 this.rows.splice(rowIndex, 1);
             }
-        }
+        },
+        closeModal() {
+            this.showModal = false;
+            document.body.classList.remove('modal-open');
+        },
     },
     created: function () {
         this.showCars()
