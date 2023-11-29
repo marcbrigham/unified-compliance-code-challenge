@@ -14,13 +14,17 @@
             v-model="page"
             type="abbreviated"
         />
+        <owner-modal :owner="selectedOwner" :show-modal="showModal" @close-modal="closeModal" />
     </div>
 </template>
 
 <script>
 import TableButtonsComponent from "./TableButtonsComponent";
-
+import OwnerModal from "./OwnerModal.vue";
 export default {
+    components: {
+        OwnerModal,
+    },
     data() {
         return {
             columns: [
@@ -64,7 +68,9 @@ export default {
             page: 1,
             filter:  '',
             perPage: 20,
-            loading: true
+            loading: true,
+            selectedOwner: null,
+            showModal: false,
         }
     },
     methods: {
@@ -76,8 +82,15 @@ export default {
         editRow() {
             console.log(this.rows);
         },
-        viewRow() {
-            console.log(this.rows);
+        viewRow(row) {
+            axios.get(`/owner/${row.id}`).then((res) => {
+                this.selectedOwner = res.data;
+            })
+            .catch((error) => {
+                console.error('Error fetching owner data:', error);
+            });
+            this.showModal = true;
+            document.body.classList.add('modal-open');
         },
         deleteRow(rows) {
             const response = confirm("Are you sure you want to delete?");
@@ -85,7 +98,11 @@ export default {
             if (rowIndex !== -1 && response) {
                 this.rows.splice(rowIndex, 1);
             }
-        }
+        },
+        closeModal() {
+            this.showModal = false;
+            document.body.classList.remove('modal-open');
+        },
     },
     created: function () {
         this.showOwners()

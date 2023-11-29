@@ -14,7 +14,7 @@
             v-model="page"
             type="abbreviated"
         />
-        <car-modal :car="selectedCar" :show-modal="showModal" @close-modal="closeModal"></car-modal>
+        <car-modal :car="selectedCar" :show-modal="showModal" @close-modal="closeModal" />
     </div>
 </template>
 
