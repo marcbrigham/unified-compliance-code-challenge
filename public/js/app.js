@@ -1986,6 +1986,12 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
+    editRow: function editRow() {
+      console.log(this.rows);
+    },
+    viewRow: function viewRow() {
+      console.log(this.rows);
+    },
     deleteRow: function deleteRow(rows) {
       var response = confirm("Are you sure you want to delete?");
       var rowIndex = this.rows.findIndex(function (item) {
@@ -2184,6 +2190,12 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
+    editRow: function editRow() {
+      console.log(this.rows);
+    },
+    viewRow: function viewRow() {
+      console.log(this.rows);
+    },
     deleteRow: function deleteRow(rows) {
       var response = confirm("Are you sure you want to delete?");
       var rowIndex = this.rows.findIndex(function (item) {
@@ -2364,6 +2376,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           });
         });
       });
+    },
+    editRow: function editRow() {
+      console.log(this.rows);
+    },
+    viewRow: function viewRow() {
+      console.log(this.rows);
     },
     deleteRow: function deleteRow(rows) {
       var response = confirm("Are you sure you want to delete?");

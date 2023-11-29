@@ -79,6 +79,12 @@ export default {
                 }));
             });
         },
+        editRow() {
+            console.log(this.rows);
+        },
+        viewRow() {
+            console.log(this.rows);
+        },
         deleteRow(rows) {
             const response = confirm("Are you sure you want to delete?");
             const rowIndex = this.rows.findIndex(item => item.id === rows.id);

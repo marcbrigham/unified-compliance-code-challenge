@@ -73,6 +73,12 @@ export default {
                 this.rows = res.data.map(o => ({...o, 'type': 'owner'}));
             });
         },
+        editRow() {
+            console.log(this.rows);
+        },
+        viewRow() {
+            console.log(this.rows);
+        },
         deleteRow(rows) {
             const response = confirm("Are you sure you want to delete?");
             const rowIndex = this.rows.findIndex(item => item.id === rows.id);
