@@ -1,7 +1,19 @@
 <template>
     <div>
-        <bootstrap-4-datatable :columns="columns" :data="rows" :filter="filter" :per-page="perPage" class="table-bordered"></bootstrap-4-datatable>
-        <bootstrap-4-datatable-pager v-model="page" type="abbreviated"></bootstrap-4-datatable-pager>
+        <bootstrap-4-datatable
+            :columns="columns"
+            :data="rows"
+            :filter="filter"
+            :per-page="perPage"
+            @view-clicked-row="viewRow"
+            @edit-clicked-row="editRow"
+            @delete-clicked-row="deleteRow"
+            class="table-bordered"
+        />
+        <bootstrap-4-datatable-pager
+            v-model="page"
+            type="abbreviated"
+        />
     </div>
 </template>
 
@@ -66,6 +78,13 @@ export default {
                     cars_count: item.cars_count,
                 }));
             });
+        },
+        deleteRow(rows) {
+            const response = confirm("Are you sure you want to delete?");
+            const rowIndex = this.rows.findIndex(item => item.id === rows.id);
+            if (rowIndex !== -1 && response) {
+                this.rows.splice(rowIndex, 1);
+            }
         }
     },
     created: function () {
