@@ -27,7 +27,7 @@ class CarController extends Controller
      */
     public function show(Car $car): Car
     {
-        $car->load(['owner', 'addresses']);
+        $car->load(['owner', 'address']);
         return $car;
     }
 
@@ -40,7 +40,7 @@ class CarController extends Controller
     public function store(Request $request): JsonResponse
     {
         $car = Car::create($request->all());
-        $car->load(['owner', 'addresses']);
+        $car->load(['owner', 'address']);
 
         return response()->json($car, 201);
     }
@@ -55,7 +55,7 @@ class CarController extends Controller
     public function update(Request $request, Car $car): JsonResponse
     {
         $car->update($request->all());
-        $car->load(['owner', 'addresses']);
+        $car->load(['owner', 'address']);
 
         return response()->json($car, 200);
     }
