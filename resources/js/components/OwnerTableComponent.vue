@@ -14,7 +14,12 @@
             v-model="page"
             type="abbreviated"
         />
-        <owner-modal :owner="selectedOwner" :show-modal="showModal" @close-modal="closeModal" />
+        <owner-modal
+            :owner="selectedOwner"
+            :show-modal="showModal"
+            :edit="editingMode"
+            @close-modal="closeModal"
+        />
     </div>
 </template>
 
@@ -71,6 +76,7 @@ export default {
             loading: true,
             selectedOwner: null,
             showModal: false,
+            editingMode: false,
         }
     },
     methods: {
@@ -79,16 +85,24 @@ export default {
                 this.rows = res.data.map(o => ({...o, 'type': 'owner'}));
             });
         },
-        editRow() {
-            console.log(this.rows);
+        editRow(row) {
+            this.openModal(row, true);
         },
         viewRow(row) {
-            axios.get(`/owner/${row.id}`).then((res) => {
-                this.selectedOwner = res.data;
-            })
-            .catch((error) => {
-                console.error('Error fetching owner data:', error);
-            });
+            this.openModal(row, false);
+        },
+        openModal(row, isEditing) {
+            this.editingMode = isEditing;
+            axios.get(`/owner/${row.id}`)
+                .then((res) => {
+                    this.selectedOwner = res.data;
+                    this.showModal = true;
+                    document.body.classList.add('modal-open');
+                })
+                .catch((error) => {
+                    console.error('Error fetching owner data:', error);
+                });
+
             this.showModal = true;
             document.body.classList.add('modal-open');
         },
@@ -96,6 +110,7 @@ export default {
             const response = confirm("Are you sure you want to delete?");
             const rowIndex = this.rows.findIndex(item => item.id === rows.id);
             if (rowIndex !== -1 && response) {
+                axios.delete(`/owner/${rows.id}`);
                 this.rows.splice(rowIndex, 1);
             }
         },
