@@ -1899,6 +1899,107 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddressModal.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddressModal.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    address: Object,
+    showModal: Boolean,
+    edit: Boolean
+  },
+  data: function data() {
+    return {
+      submitted: false
+    };
+  },
+  methods: {
+    closeModal: function closeModal() {
+      this.$emit('close-modal');
+    },
+    changeOwner: function changeOwner(field, event) {
+      var value = event.target.value;
+      console.log('Changing Owner:', field, value);
+      this.address[field] = value;
+    },
+    changeCar: function changeCar(index, field, event) {
+      var value = event.target.value;
+      console.log('Changing Car:', field, value);
+      this.address.cars[index][field] = value;
+    },
+    submitForm: function submitForm(address) {
+      axios.put("/owner/".concat(address.id), this.address).then(function (response) {
+        console.log('Put request successful:', response.data);
+      })["catch"](function (error) {
+        console.error('Error:', error);
+      });
+      this.submitted = true;
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddressTableComponent.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddressTableComponent.vue?vue&type=script&lang=js& ***!
@@ -1909,6 +2010,12 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TableButtonsComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TableButtonsComponent */ "./resources/js/components/TableButtonsComponent.vue");
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1965,7 +2072,10 @@ __webpack_require__.r(__webpack_exports__);
       page: 1,
       filter: '',
       perPage: 20,
-      loading: true
+      loading: true,
+      selectedAddress: null,
+      showModal: false,
+      editingMode: false
     };
   },
   methods: {
@@ -1986,11 +2096,26 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
-    editRow: function editRow() {
-      console.log(this.rows);
+    editRow: function editRow(row) {
+      this.openModal(row, true);
     },
-    viewRow: function viewRow() {
-      console.log(this.rows);
+    viewRow: function viewRow(row) {
+      this.openModal(row, false);
+    },
+    openModal: function openModal(row, isEditing) {
+      var _this2 = this;
+
+      this.editingMode = isEditing;
+      axios.get("/address/".concat(row.id)).then(function (res) {
+        _this2.selectedAddress = res.data;
+        _this2.showModal = true;
+        document.body.classList.add('modal-open');
+        console.log(_this2.selectedAddress);
+      })["catch"](function (error) {
+        console.error('Error fetching adress data:', error);
+      });
+      this.showModal = true;
+      document.body.classList.add('modal-open');
     },
     deleteRow: function deleteRow(rows) {
       var response = confirm("Are you sure you want to delete?");
@@ -1999,8 +2124,13 @@ __webpack_require__.r(__webpack_exports__);
       });
 
       if (rowIndex !== -1 && response) {
+        axios["delete"]("/address/".concat(rows.id));
         this.rows.splice(rowIndex, 1);
       }
+    },
+    closeModal: function closeModal() {
+      this.showModal = false;
+      document.body.classList.remove('modal-open');
     }
   },
   created: function created() {
@@ -2129,14 +2259,64 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     car: Object,
-    showModal: Boolean
+    showModal: Boolean,
+    edit: Boolean
   },
   methods: {
     closeModal: function closeModal() {
       this.$emit('close-modal');
+    },
+    changeOwner: function changeOwner(field, event) {
+      var value = event.target.value;
+      console.log('Changing Owner:', field, value);
+      this.car.owner[field] = value;
+    },
+    changeAddress: function changeAddress(field, event) {
+      var value = event.target.value;
+      console.log('Changing address:', field, value);
+      this.car.address[field] = value;
+    },
+    submitForm: function submitForm(car) {
+      console.log('Put request successful:', JSON.stringify(this.car));
+      axios.put("/car/".concat(car.id), this.car).then(function (response) {
+        console.log('Put request successful:', response.data);
+      })["catch"](function (error) {
+        console.error('Error:', error);
+      });
+      this.submitted = true;
     }
   }
 });
@@ -2154,6 +2334,11 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TableButtonsComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TableButtonsComponent */ "./resources/js/components/TableButtonsComponent.vue");
 /* harmony import */ var _CarModal_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CarModal.vue */ "./resources/js/components/CarModal.vue");
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2227,7 +2412,8 @@ __webpack_require__.r(__webpack_exports__);
       perPage: 20,
       loading: true,
       selectedCar: null,
-      showModal: false
+      showModal: false,
+      editingMode: false
     };
   },
   methods: {
@@ -2250,13 +2436,23 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
-    editRow: function editRow(car) {
-      this.selectedCar = car;
-      this.showModal = true;
-      document.body.classList.add('modal-open');
+    editRow: function editRow(row) {
+      this.openModal(row, true);
     },
-    viewRow: function viewRow(car) {
-      this.selectedCar = car;
+    viewRow: function viewRow(row) {
+      this.openModal(row, false);
+    },
+    openModal: function openModal(row, isEditing) {
+      var _this2 = this;
+
+      this.editingMode = isEditing;
+      axios.get("/car/".concat(row.id)).then(function (res) {
+        _this2.selectedCar = res.data;
+        _this2.showModal = true;
+        document.body.classList.add('modal-open');
+      })["catch"](function (error) {
+        console.error('Error fetching car data:', error);
+      });
       this.showModal = true;
       document.body.classList.add('modal-open');
     },
@@ -2267,6 +2463,7 @@ __webpack_require__.r(__webpack_exports__);
       });
 
       if (rowIndex !== -1 && response) {
+        axios["delete"]("/car/".concat(rows.id));
         this.rows.splice(rowIndex, 1);
       }
     },
@@ -2402,14 +2599,86 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     owner: Object,
-    showModal: Boolean
+    showModal: Boolean,
+    edit: Boolean
+  },
+  data: function data() {
+    return {
+      submitted: false
+    };
   },
   methods: {
     closeModal: function closeModal() {
       this.$emit('close-modal');
+    },
+    changeAddress: function changeAddress(index, field, event) {
+      var value = event.target.value;
+      console.log('Changing address:', field, value);
+      this.owner.addresses[index][field] = value;
+    },
+    changeCar: function changeCar(index, field, event) {
+      var value = event.target.value;
+      console.log('Changing Car:', field, value);
+      this.owner.cars[index][field] = value;
+    },
+    submitForm: function submitForm(owner) {
+      console.log('Put request successful:', JSON.stringify(this.owner));
+      axios.put("/owner/".concat(owner.id), this.owner).then(function (response) {
+        console.log('Put request successful:', response.data);
+      })["catch"](function (error) {
+        console.error('Error:', error);
+      });
+      this.submitted = true;
     }
   }
 });
@@ -2433,6 +2702,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2497,7 +2771,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       perPage: 20,
       loading: true,
       selectedOwner: null,
-      showModal: false
+      showModal: false,
+      editingMode: false
     };
   },
   methods: {
@@ -2512,14 +2787,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         });
       });
     },
-    editRow: function editRow() {
-      console.log(this.rows);
+    editRow: function editRow(row) {
+      this.openModal(row, true);
     },
     viewRow: function viewRow(row) {
+      this.openModal(row, false);
+    },
+    openModal: function openModal(row, isEditing) {
       var _this2 = this;
 
+      this.editingMode = isEditing;
       axios.get("/owner/".concat(row.id)).then(function (res) {
         _this2.selectedOwner = res.data;
+        _this2.showModal = true;
+        document.body.classList.add('modal-open');
       })["catch"](function (error) {
         console.error('Error fetching owner data:', error);
       });
@@ -2533,6 +2814,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
 
       if (rowIndex !== -1 && response) {
+        axios["delete"]("/owner/".concat(rows.id));
         this.rows.splice(rowIndex, 1);
       }
     },
@@ -7091,6 +7373,25 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddressModal.vue?vue&type=style&index=0&id=0f590684&scoped=true&lang=css&":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddressModal.vue?vue&type=style&index=0&id=0f590684&scoped=true&lang=css& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.modal[data-v-0f590684] {\n    position: fixed;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    background: rgba(0, 0, 0, 0.5);\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    z-index: 999;\n    overflow: hidden;\n}\n.modal-open[data-v-0f590684] {\n    overflow: hidden;\n}\n.modal-dialog[data-v-0f590684] {\n    background: white;\n    border-radius: 5px;\n    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);\n    width: 50%;\n}\n.modal-content[data-v-0f590684] {\n    padding: 20px;\n}\n.modal-header[data-v-0f590684] {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n}\n.close[data-v-0f590684] {\n    font-size: 24px;\n    cursor: pointer;\n}\n.modal-body[data-v-0f590684] {\n    padding: 20px;\n}\n.modal-address[data-v-0f590684] {\n    padding-bottom:12px;\n}\n.modal-car[data-v-0f590684]{\n    list-style: none;\n    padding-left:0;\n    margin-bottom:0;\n}\n.modal-footer[data-v-0f590684] {\n    text-align: right;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CarModal.vue?vue&type=style&index=0&id=40052024&scoped=true&lang=css&":
 /*!**************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/CarModal.vue?vue&type=style&index=0&id=40052024&scoped=true&lang=css& ***!
@@ -7103,7 +7404,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.modal[data-v-40052024] {\n    position: fixed;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    background: rgba(0, 0, 0, 0.5);\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    z-index: 999;\n    overflow: hidden;\n}\n.modal-open[data-v-40052024] {\n    overflow: hidden;\n}\n.modal-dialog[data-v-40052024] {\n    background: white;\n    border-radius: 5px;\n    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);\n    min-width: 320px;\n}\n.modal-content[data-v-40052024] {\n    padding: 20px;\n}\n.modal-header[data-v-40052024] {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n}\n.close[data-v-40052024] {\n    font-size: 24px;\n    cursor: pointer;\n}\n.modal-body[data-v-40052024] {\n    padding: 20px;\n}\n.modal-footer[data-v-40052024] {\n    text-align: right;\n}\n", ""]);
+exports.push([module.i, "\n.modal[data-v-40052024] {\n    position: fixed;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    background: rgba(0, 0, 0, 0.5);\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    z-index: 999;\n    overflow: hidden;\n}\n.modal-open[data-v-40052024] {\n    overflow: hidden;\n}\n.modal-dialog[data-v-40052024] {\n    background: white;\n    border-radius: 5px;\n    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);\n    min-width: 320px;\n}\n.modal-content[data-v-40052024] {\n    padding: 20px;\n}\n.modal-header[data-v-40052024] {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n}\n.close[data-v-40052024] {\n    font-size: 24px;\n    cursor: pointer;\n}\n.modal-address[data-v-40052024] {\n    padding-bottom:12px;\n}\n.modal-car[data-v-40052024]{\n    list-style: none;\n    padding-left:0;\n    margin-bottom:0;\n}\n.modal-body[data-v-40052024] {\n    padding: 20px;\n}\n.modal-footer[data-v-40052024] {\n    text-align: right;\n}\n", ""]);
 
 // exports
 
@@ -7122,7 +7423,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.modal[data-v-27bf0f65] {\n    position: fixed;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    background: rgba(0, 0, 0, 0.5);\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    z-index: 999;\n    overflow: hidden;\n}\n.modal-open[data-v-27bf0f65] {\n    overflow: hidden;\n}\n.modal-dialog[data-v-27bf0f65] {\n    background: white;\n    border-radius: 5px;\n    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);\n    width: 50%;\n}\n.modal-content[data-v-27bf0f65] {\n    padding: 20px;\n}\n.modal-header[data-v-27bf0f65] {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n}\n.close[data-v-27bf0f65] {\n    font-size: 24px;\n    cursor: pointer;\n}\n.modal-body[data-v-27bf0f65] {\n    padding: 20px;\n}\n.modal-address[data-v-27bf0f65] {\n    padding-bottom:12px;\n}\n.modal-car[data-v-27bf0f65]{\n    list-style: none;\n    padding-left:0;\n    margin-bottom:0;\n}\n.modal-footer[data-v-27bf0f65] {\n    text-align: right;\n}\n", ""]);
+exports.push([module.i, "\n.modal[data-v-27bf0f65] {\n    position: fixed;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    background: rgba(0, 0, 0, 0.5);\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    z-index: 999;\n    overflow: hidden;\n}\n.modal-open[data-v-27bf0f65] {\n    overflow: hidden;\n}\n.modal-dialog[data-v-27bf0f65] {\n    background: white;\n    border-radius: 5px;\n    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);\n    width: 50%;\n}\n.modal-content[data-v-27bf0f65] {\n    padding: 20px;\n}\n.modal-header[data-v-27bf0f65] {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n}\n.close[data-v-27bf0f65] {\n    font-size: 24px;\n    cursor: pointer;\n}\n.modal-body[data-v-27bf0f65] {\n    padding: 20px;\n}\n.modal-address[data-v-27bf0f65], .modal-car[data-v-27bf0f65]{\n    list-style: none;\n    padding-left:0;\n    margin-bottom:0;\n    padding-bottom:12px;\n}\n.modal-footer[data-v-27bf0f65] {\n    text-align: right;\n}\n", ""]);
 
 // exports
 
@@ -38345,6 +38646,36 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddressModal.vue?vue&type=style&index=0&id=0f590684&scoped=true&lang=css&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddressModal.vue?vue&type=style&index=0&id=0f590684&scoped=true&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./AddressModal.vue?vue&type=style&index=0&id=0f590684&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddressModal.vue?vue&type=style&index=0&id=0f590684&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CarModal.vue?vue&type=style&index=0&id=40052024&scoped=true&lang=css&":
 /*!******************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/CarModal.vue?vue&type=style&index=0&id=40052024&scoped=true&lang=css& ***!
@@ -39341,6 +39672,288 @@ Component.registerHooks = function registerHooks(keys) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddressModal.vue?vue&type=template&id=0f590684&scoped=true&":
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddressModal.vue?vue&type=template&id=0f590684&scoped=true& ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.showModal
+    ? _c("div", { staticClass: "modal" }, [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _c("div", { staticClass: "modal-header" }, [
+              _c("h5", { staticClass: "modal-title" }, [
+                _vm._v("Address Details")
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                { staticClass: "close", on: { click: _vm.closeModal } },
+                [_vm._v("×")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _vm.address && !_vm.edit
+                ? _c("div", [
+                    _vm.address.owner
+                      ? _c("div", [
+                          _c("strong", [_vm._v("Owner:")]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-address" }, [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(_vm.address.owner.first_name) +
+                                " " +
+                                _vm._s(_vm.address.owner.last_name) +
+                                "\n                        "
+                            )
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      [
+                        _c("strong", [_vm._v("Cars:")]),
+                        _vm._v(" "),
+                        _vm._l(_vm.address.cars, function(cars, index) {
+                          return _c(
+                            "ul",
+                            { key: index, staticClass: "modal-car" },
+                            [
+                              _c("li", [
+                                _vm._v(
+                                  _vm._s(cars.make) + " " + _vm._s(cars.model)
+                                )
+                              ])
+                            ]
+                          )
+                        })
+                      ],
+                      2
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.address && _vm.edit
+                ? _c("div", [
+                    _c(
+                      "form",
+                      {
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            return _vm.submitForm(_vm.address)
+                          }
+                        }
+                      },
+                      [
+                        _c("div", [
+                          _c("strong", [_vm._v("Owner:")]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-address" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.address.owner.first_name,
+                                  expression: "address.owner.first_name"
+                                }
+                              ],
+                              attrs: {
+                                type: "text",
+                                placeholder: _vm.address.owner.first_name
+                              },
+                              domProps: { value: _vm.address.owner.first_name },
+                              on: {
+                                input: [
+                                  function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.address.owner,
+                                      "first_name",
+                                      $event.target.value
+                                    )
+                                  },
+                                  function($event) {
+                                    return _vm.changeOwner("first_name", $event)
+                                  }
+                                ]
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.address.owner.last_name,
+                                  expression: "address.owner.last_name"
+                                }
+                              ],
+                              attrs: {
+                                type: "text",
+                                placeholder: _vm.address.owner.last_name
+                              },
+                              domProps: { value: _vm.address.owner.last_name },
+                              on: {
+                                input: [
+                                  function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.address.owner,
+                                      "last_name",
+                                      $event.target.value
+                                    )
+                                  },
+                                  function($event) {
+                                    return _vm.changeOwner("last_name", $event)
+                                  }
+                                ]
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          [
+                            _c("strong", [_vm._v("Cars:")]),
+                            _vm._v(" "),
+                            _vm._l(_vm.address.cars, function(car, index) {
+                              return _c(
+                                "ul",
+                                { key: index, staticClass: "modal-car" },
+                                [
+                                  _c("li", [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: car.make,
+                                          expression: "car.make"
+                                        }
+                                      ],
+                                      attrs: {
+                                        type: "text",
+                                        placeholder: car.make
+                                      },
+                                      domProps: { value: car.make },
+                                      on: {
+                                        input: [
+                                          function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              car,
+                                              "make",
+                                              $event.target.value
+                                            )
+                                          },
+                                          function($event) {
+                                            return _vm.changeCar(
+                                              index,
+                                              "make",
+                                              $event
+                                            )
+                                          }
+                                        ]
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: car.model,
+                                          expression: "car.model"
+                                        }
+                                      ],
+                                      attrs: {
+                                        type: "text",
+                                        placeholder: car.model
+                                      },
+                                      domProps: { value: car.model },
+                                      on: {
+                                        input: [
+                                          function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              car,
+                                              "model",
+                                              $event.target.value
+                                            )
+                                          },
+                                          function($event) {
+                                            return _vm.changeCar(
+                                              index,
+                                              "model",
+                                              $event
+                                            )
+                                          }
+                                        ]
+                                      }
+                                    })
+                                  ])
+                                ]
+                              )
+                            })
+                          ],
+                          2
+                        ),
+                        _vm._v(" "),
+                        _c("button", { attrs: { type: "submit" } }, [
+                          _vm._v("Submit")
+                        ])
+                      ]
+                    )
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  on: { click: _vm.closeModal }
+                },
+                [_vm._v("Close")]
+              )
+            ])
+          ])
+        ])
+      ])
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddressTableComponent.vue?vue&type=template&id=768feb08&":
 /*!************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AddressTableComponent.vue?vue&type=template&id=768feb08& ***!
@@ -39383,6 +39996,15 @@ var render = function() {
           },
           expression: "page"
         }
+      }),
+      _vm._v(" "),
+      _c("address-modal", {
+        attrs: {
+          address: _vm.selectedAddress,
+          "show-modal": _vm.showModal,
+          edit: _vm.editingMode
+        },
+        on: { "close-modal": _vm.closeModal }
       })
     ],
     1
@@ -39588,31 +40210,296 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "modal-body" }, [
-              _c("p", [
-                _c("strong", [_vm._v("Owner:")]),
-                _vm._v(
-                  "\n                    " +
-                    _vm._s(_vm.car.owner_name) +
-                    "\n                "
-                )
-              ]),
+              _vm.car && !_vm.edit
+                ? _c("div", [
+                    _vm.car.owner
+                      ? _c("div", [
+                          _c("strong", [_vm._v("Owner:")]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-address" }, [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(_vm.car.owner.first_name) +
+                                " " +
+                                _vm._s(_vm.car.owner.last_name) +
+                                "\n                        "
+                            )
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("div", [
+                      _c("strong", [_vm._v("Address:")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "modal-address" }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.car.address.address) +
+                            "\n                            "
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.car.address.city) +
+                            "\n                            "
+                        ),
+                        _c("br"),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.car.address.country) +
+                            "\n                            "
+                        ),
+                        _c("span", [
+                          _vm._v(_vm._s(_vm.car.address.postal_code))
+                        ])
+                      ])
+                    ])
+                  ])
+                : _vm._e(),
               _vm._v(" "),
-              _c("p", [
-                _c("strong", [_vm._v("Address:")]),
-                _vm._v(" "),
-                _c("br"),
-                _vm._v(
-                  " " + _vm._s(_vm.car.address) + "\n                    "
-                ),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.car.city) + "\n                    "),
-                _c("br"),
-                _vm._v(
-                  " " + _vm._s(_vm.car.country) + "\n                    "
-                ),
-                _c("br"),
-                _vm._v(" " + _vm._s(_vm.car.postal_code) + "\n                ")
-              ])
+              _vm.car && _vm.edit
+                ? _c("div", [
+                    _c(
+                      "form",
+                      {
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            return _vm.submitForm(_vm.car)
+                          }
+                        }
+                      },
+                      [
+                        _c("div", [
+                          _c("strong", [_vm._v("Owner:")]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-address" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.car.owner.first_name,
+                                  expression: "car.owner.first_name"
+                                }
+                              ],
+                              attrs: {
+                                type: "text",
+                                placeholder: _vm.car.owner.first_name
+                              },
+                              domProps: { value: _vm.car.owner.first_name },
+                              on: {
+                                input: [
+                                  function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.car.owner,
+                                      "first_name",
+                                      $event.target.value
+                                    )
+                                  },
+                                  function($event) {
+                                    return _vm.changeOwner("first_name", $event)
+                                  }
+                                ]
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.car.owner.last_name,
+                                  expression: "car.owner.last_name"
+                                }
+                              ],
+                              attrs: {
+                                type: "text",
+                                placeholder: _vm.car.owner.last_name
+                              },
+                              domProps: { value: _vm.car.owner.last_name },
+                              on: {
+                                input: [
+                                  function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.car.owner,
+                                      "last_name",
+                                      $event.target.value
+                                    )
+                                  },
+                                  function($event) {
+                                    return _vm.changeOwner("last_name", $event)
+                                  }
+                                ]
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("strong", [_vm._v("Address:")]),
+                          _vm._v(" "),
+                          _c("ul", { staticClass: "modal-car" }, [
+                            _c("li", [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.car.address.address,
+                                    expression: "car.address.address"
+                                  }
+                                ],
+                                attrs: {
+                                  type: "text",
+                                  placeholder: _vm.car.address.address
+                                },
+                                domProps: { value: _vm.car.address.address },
+                                on: {
+                                  input: [
+                                    function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.car.address,
+                                        "address",
+                                        $event.target.value
+                                      )
+                                    },
+                                    function($event) {
+                                      return _vm.changeAddress(
+                                        "address",
+                                        $event
+                                      )
+                                    }
+                                  ]
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.car.address.city,
+                                    expression: "car.address.city"
+                                  }
+                                ],
+                                attrs: {
+                                  type: "text",
+                                  placeholder: _vm.car.address.city
+                                },
+                                domProps: { value: _vm.car.address.city },
+                                on: {
+                                  input: [
+                                    function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.car.address,
+                                        "city",
+                                        $event.target.value
+                                      )
+                                    },
+                                    function($event) {
+                                      return _vm.changeAddress("city", $event)
+                                    }
+                                  ]
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.car.address.country,
+                                    expression: "car.address.country"
+                                  }
+                                ],
+                                attrs: {
+                                  type: "text",
+                                  placeholder: _vm.car.address.country
+                                },
+                                domProps: { value: _vm.car.address.country },
+                                on: {
+                                  input: [
+                                    function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.car.address,
+                                        "country",
+                                        $event.target.value
+                                      )
+                                    },
+                                    function($event) {
+                                      return _vm.changeAddress(
+                                        "country",
+                                        $event
+                                      )
+                                    }
+                                  ]
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.car.address.postal_code,
+                                    expression: "car.address.postal_code"
+                                  }
+                                ],
+                                attrs: {
+                                  type: "text",
+                                  placeholder: _vm.car.address.postal_code
+                                },
+                                domProps: {
+                                  value: _vm.car.address.postal_code
+                                },
+                                on: {
+                                  input: [
+                                    function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.car.address,
+                                        "postal_code",
+                                        $event.target.value
+                                      )
+                                    },
+                                    function($event) {
+                                      return _vm.changeAddress(
+                                        "postal_code",
+                                        $event
+                                      )
+                                    }
+                                  ]
+                                }
+                              })
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("button", { attrs: { type: "submit" } }, [
+                          _vm._v("Submit")
+                        ])
+                      ]
+                    )
+                  ])
+                : _vm._e()
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "modal-footer" }, [
@@ -39682,7 +40569,11 @@ var render = function() {
       }),
       _vm._v(" "),
       _c("car-modal", {
-        attrs: { car: _vm.selectedCar, "show-modal": _vm.showModal },
+        attrs: {
+          car: _vm.selectedCar,
+          "show-modal": _vm.showModal,
+          edit: _vm.editingMode
+        },
         on: { "close-modal": _vm.closeModal }
       })
     ],
@@ -39823,61 +40714,383 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "modal-body" }, [
-              _vm.owner
-                ? _c(
-                    "div",
-                    [
-                      _c("strong", [_vm._v("Address:")]),
-                      _vm._v(" "),
-                      _vm._l(_vm.owner.addresses, function(address, index) {
-                        return _c("div", { key: index }, [
-                          _c("div", { staticClass: "modal-address" }, [
-                            _vm._v(
-                              "\n                            " +
-                                _vm._s(address.address) +
-                                "\n                            "
-                            ),
-                            _c("br"),
-                            _vm._v(
-                              " " +
-                                _vm._s(address.city) +
-                                "\n                            "
-                            ),
-                            _c("br"),
-                            _vm._v(
-                              " " +
-                                _vm._s(address.country) +
-                                "\n                            "
-                            ),
-                            _c("span", [_vm._v(_vm._s(address.postal_code))])
-                          ])
+              _vm.owner && !_vm.edit
+                ? _c("div", [
+                    _c("strong", [_vm._v("Address:")]),
+                    _vm._v(" "),
+                    _vm.owner.addresses != ""
+                      ? _c("div", [
+                          _c(
+                            "div",
+                            _vm._l(_vm.owner.addresses, function(
+                              address,
+                              index
+                            ) {
+                              return _c("div", { key: index }, [
+                                _c("div", { staticClass: "modal-address" }, [
+                                  _vm._v(
+                                    "\n                                    " +
+                                      _vm._s(address.address) +
+                                      "\n                                    "
+                                  ),
+                                  _c("br"),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(address.city) +
+                                      "\n                                    "
+                                  ),
+                                  _c("br"),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(address.country) +
+                                      "\n                                    "
+                                  ),
+                                  _c("span", [
+                                    _vm._v(_vm._s(address.postal_code))
+                                  ])
+                                ])
+                              ])
+                            }),
+                            0
+                          )
                         ])
-                      }),
+                      : _c("div", [
+                          _vm._v(
+                            "\n                        No address on file\n                    "
+                          )
+                        ]),
+                    _vm._v(" "),
+                    _c("div", [
+                      _c("strong", [_vm._v("Cars:")]),
                       _vm._v(" "),
-                      _c(
-                        "div",
-                        [
+                      _vm.owner.cars != ""
+                        ? _c(
+                            "div",
+                            _vm._l(_vm.owner.cars, function(cars, index) {
+                              return _c(
+                                "ul",
+                                { key: index, staticClass: "modal-car" },
+                                [
+                                  _c("li", [
+                                    _vm._v(
+                                      _vm._s(cars.make) +
+                                        " " +
+                                        _vm._s(cars.model)
+                                    )
+                                  ])
+                                ]
+                              )
+                            }),
+                            0
+                          )
+                        : _c("div", [
+                            _vm._v(
+                              "\n                            No cars on file\n                        "
+                            )
+                          ])
+                    ])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.owner && _vm.edit
+                ? _c("div", [
+                    _c(
+                      "form",
+                      {
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            return _vm.submitForm(_vm.owner)
+                          }
+                        }
+                      },
+                      [
+                        _c("div", [
+                          _c("strong", [_vm._v("Addresses:")]),
+                          _vm._v(" "),
+                          _vm.owner.addresses != ""
+                            ? _c(
+                                "div",
+                                _vm._l(_vm.owner.addresses, function(
+                                  address,
+                                  index
+                                ) {
+                                  return _c(
+                                    "ul",
+                                    {
+                                      key: index,
+                                      staticClass: "modal-address"
+                                    },
+                                    [
+                                      _c("li", [
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: address.address,
+                                              expression: "address.address"
+                                            }
+                                          ],
+                                          attrs: {
+                                            type: "text",
+                                            placeholder: address.address
+                                          },
+                                          domProps: { value: address.address },
+                                          on: {
+                                            input: [
+                                              function($event) {
+                                                if ($event.target.composing) {
+                                                  return
+                                                }
+                                                _vm.$set(
+                                                  address,
+                                                  "address",
+                                                  $event.target.value
+                                                )
+                                              },
+                                              function($event) {
+                                                return _vm.changeAddress(
+                                                  index,
+                                                  "address",
+                                                  $event
+                                                )
+                                              }
+                                            ]
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: address.city,
+                                              expression: "address.city"
+                                            }
+                                          ],
+                                          attrs: {
+                                            type: "text",
+                                            placeholder: address.city
+                                          },
+                                          domProps: { value: address.city },
+                                          on: {
+                                            input: [
+                                              function($event) {
+                                                if ($event.target.composing) {
+                                                  return
+                                                }
+                                                _vm.$set(
+                                                  address,
+                                                  "city",
+                                                  $event.target.value
+                                                )
+                                              },
+                                              function($event) {
+                                                return _vm.changeAddress(
+                                                  index,
+                                                  "city",
+                                                  $event
+                                                )
+                                              }
+                                            ]
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: address.country,
+                                              expression: "address.country"
+                                            }
+                                          ],
+                                          attrs: {
+                                            type: "text",
+                                            placeholder: address.country
+                                          },
+                                          domProps: { value: address.country },
+                                          on: {
+                                            input: [
+                                              function($event) {
+                                                if ($event.target.composing) {
+                                                  return
+                                                }
+                                                _vm.$set(
+                                                  address,
+                                                  "country",
+                                                  $event.target.value
+                                                )
+                                              },
+                                              function($event) {
+                                                return _vm.changeAddress(
+                                                  index,
+                                                  "country",
+                                                  $event
+                                                )
+                                              }
+                                            ]
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: address.postal_code,
+                                              expression: "address.postal_code"
+                                            }
+                                          ],
+                                          attrs: {
+                                            type: "text",
+                                            placeholder: address.postal_code
+                                          },
+                                          domProps: {
+                                            value: address.postal_code
+                                          },
+                                          on: {
+                                            input: [
+                                              function($event) {
+                                                if ($event.target.composing) {
+                                                  return
+                                                }
+                                                _vm.$set(
+                                                  address,
+                                                  "postal_code",
+                                                  $event.target.value
+                                                )
+                                              },
+                                              function($event) {
+                                                return _vm.changeAddress(
+                                                  index,
+                                                  "postal_code",
+                                                  $event
+                                                )
+                                              }
+                                            ]
+                                          }
+                                        })
+                                      ])
+                                    ]
+                                  )
+                                }),
+                                0
+                              )
+                            : _c("div", [
+                                _vm._v(
+                                  "\n                                No address on file\n                            "
+                                )
+                              ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
                           _c("strong", [_vm._v("Cars:")]),
                           _vm._v(" "),
-                          _vm._l(_vm.owner.cars, function(cars, index) {
-                            return _c(
-                              "ul",
-                              { key: index, staticClass: "modal-car" },
-                              [
-                                _c("li", [
-                                  _vm._v(
-                                    _vm._s(cars.make) + " " + _vm._s(cars.model)
+                          _vm.owner.cars != ""
+                            ? _c(
+                                "div",
+                                _vm._l(_vm.owner.cars, function(car, index) {
+                                  return _c(
+                                    "ul",
+                                    { key: index, staticClass: "modal-car" },
+                                    [
+                                      _c("li", [
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: car.make,
+                                              expression: "car.make"
+                                            }
+                                          ],
+                                          attrs: {
+                                            type: "text",
+                                            placeholder: car.make
+                                          },
+                                          domProps: { value: car.make },
+                                          on: {
+                                            input: [
+                                              function($event) {
+                                                if ($event.target.composing) {
+                                                  return
+                                                }
+                                                _vm.$set(
+                                                  car,
+                                                  "make",
+                                                  $event.target.value
+                                                )
+                                              },
+                                              function($event) {
+                                                return _vm.changeCar(
+                                                  index,
+                                                  "make",
+                                                  $event
+                                                )
+                                              }
+                                            ]
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: car.model,
+                                              expression: "car.model"
+                                            }
+                                          ],
+                                          attrs: {
+                                            type: "text",
+                                            placeholder: car.model
+                                          },
+                                          domProps: { value: car.model },
+                                          on: {
+                                            input: [
+                                              function($event) {
+                                                if ($event.target.composing) {
+                                                  return
+                                                }
+                                                _vm.$set(
+                                                  car,
+                                                  "model",
+                                                  $event.target.value
+                                                )
+                                              },
+                                              function($event) {
+                                                return _vm.changeCar(
+                                                  index,
+                                                  "model",
+                                                  $event
+                                                )
+                                              }
+                                            ]
+                                          }
+                                        })
+                                      ])
+                                    ]
                                   )
-                                ])
-                              ]
-                            )
-                          })
-                        ],
-                        2
-                      )
-                    ],
-                    2
-                  )
+                                }),
+                                0
+                              )
+                            : _c("div", [
+                                _vm._v(
+                                  "\n                                No cars on file\n                            "
+                                )
+                              ])
+                        ]),
+                        _vm._v(" "),
+                        _vm.owner.cars != ""
+                          ? _c("button", { attrs: { type: "submit" } }, [
+                              _vm._v("Submit")
+                            ])
+                          : _vm._e()
+                      ]
+                    )
+                  ])
                 : _vm._e()
             ]),
             _vm._v(" "),
@@ -39948,7 +41161,11 @@ var render = function() {
       }),
       _vm._v(" "),
       _c("owner-modal", {
-        attrs: { owner: _vm.selectedOwner, "show-modal": _vm.showModal },
+        attrs: {
+          owner: _vm.selectedOwner,
+          "show-modal": _vm.showModal,
+          edit: _vm.editingMode
+        },
         on: { "close-modal": _vm.closeModal }
       })
     ],
@@ -56183,6 +57400,7 @@ module.exports = function(module) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"./components/AddressModal.vue": "./resources/js/components/AddressModal.vue",
 	"./components/AddressTableComponent.vue": "./resources/js/components/AddressTableComponent.vue",
 	"./components/Addresses.vue": "./resources/js/components/Addresses.vue",
 	"./components/App.vue": "./resources/js/components/App.vue",
@@ -56330,6 +57548,93 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/components/AddressModal.vue":
+/*!**************************************************!*\
+  !*** ./resources/js/components/AddressModal.vue ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AddressModal_vue_vue_type_template_id_0f590684_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AddressModal.vue?vue&type=template&id=0f590684&scoped=true& */ "./resources/js/components/AddressModal.vue?vue&type=template&id=0f590684&scoped=true&");
+/* harmony import */ var _AddressModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AddressModal.vue?vue&type=script&lang=js& */ "./resources/js/components/AddressModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _AddressModal_vue_vue_type_style_index_0_id_0f590684_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AddressModal.vue?vue&type=style&index=0&id=0f590684&scoped=true&lang=css& */ "./resources/js/components/AddressModal.vue?vue&type=style&index=0&id=0f590684&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _AddressModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AddressModal_vue_vue_type_template_id_0f590684_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AddressModal_vue_vue_type_template_id_0f590684_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "0f590684",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AddressModal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AddressModal.vue?vue&type=script&lang=js&":
+/*!***************************************************************************!*\
+  !*** ./resources/js/components/AddressModal.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AddressModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./AddressModal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddressModal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AddressModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AddressModal.vue?vue&type=style&index=0&id=0f590684&scoped=true&lang=css&":
+/*!***********************************************************************************************************!*\
+  !*** ./resources/js/components/AddressModal.vue?vue&type=style&index=0&id=0f590684&scoped=true&lang=css& ***!
+  \***********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_AddressModal_vue_vue_type_style_index_0_id_0f590684_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--6-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--6-2!../../../node_modules/vue-loader/lib??vue-loader-options!./AddressModal.vue?vue&type=style&index=0&id=0f590684&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddressModal.vue?vue&type=style&index=0&id=0f590684&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_AddressModal_vue_vue_type_style_index_0_id_0f590684_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_AddressModal_vue_vue_type_style_index_0_id_0f590684_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_AddressModal_vue_vue_type_style_index_0_id_0f590684_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_AddressModal_vue_vue_type_style_index_0_id_0f590684_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+
+
+/***/ }),
+
+/***/ "./resources/js/components/AddressModal.vue?vue&type=template&id=0f590684&scoped=true&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/AddressModal.vue?vue&type=template&id=0f590684&scoped=true& ***!
+  \*********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddressModal_vue_vue_type_template_id_0f590684_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./AddressModal.vue?vue&type=template&id=0f590684&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AddressModal.vue?vue&type=template&id=0f590684&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddressModal_vue_vue_type_template_id_0f590684_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AddressModal_vue_vue_type_template_id_0f590684_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
