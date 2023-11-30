@@ -14,7 +14,12 @@
             v-model="page"
             type="abbreviated"
         />
-        <car-modal :car="selectedCar" :show-modal="showModal" @close-modal="closeModal" />
+        <car-modal
+            :car="selectedCar"
+            :show-modal="showModal"
+            :edit="editingMode"
+            @close-modal="closeModal"
+        />
     </div>
 </template>
 
@@ -82,6 +87,7 @@ export default {
             loading: true,
             selectedCar: null,
             showModal: false,
+            editingMode: false,
         }
     },
     methods: {
@@ -100,13 +106,24 @@ export default {
                 }));
             });
         },
-        editRow(car) {
-            this.selectedCar = car;
-            this.showModal = true;
-            document.body.classList.add('modal-open');
+        editRow(row) {
+            this.openModal(row, true);
         },
-        viewRow(car) {
-            this.selectedCar = car;
+        viewRow(row) {
+            this.openModal(row, false);
+        },
+        openModal(row, isEditing) {
+            this.editingMode = isEditing;
+            axios.get(`/car/${row.id}`)
+                .then((res) => {
+                    this.selectedCar = res.data;
+                    this.showModal = true;
+                    document.body.classList.add('modal-open');
+                })
+                .catch((error) => {
+                    console.error('Error fetching car data:', error);
+                });
+
             this.showModal = true;
             document.body.classList.add('modal-open');
         },
@@ -114,6 +131,7 @@ export default {
             const response = confirm("Are you sure you want to delete?");
             const rowIndex = this.rows.findIndex(item => item.id === rows.id);
             if (rowIndex !== -1 && response) {
+                axios.delete(`/car/${rows.id}`);
                 this.rows.splice(rowIndex, 1);
             }
         },
