@@ -14,6 +14,12 @@
             v-model="page"
             type="abbreviated"
         />
+        <address-modal
+            :address="selectedAddress"
+            :show-modal="showModal"
+            :edit="editingMode"
+            @close-modal="closeModal"
+        />
     </div>
 </template>
 
@@ -62,7 +68,10 @@ export default {
             page: 1,
             filter:  '',
             perPage: 20,
-            loading: true
+            loading: true,
+            selectedAddress: null,
+            showModal: false,
+            editingMode: false,
         }
     },
     methods: {
@@ -79,19 +88,40 @@ export default {
                 }));
             });
         },
-        editRow() {
-            console.log(this.rows);
+        editRow(row) {
+            this.openModal(row, true);
         },
-        viewRow() {
-            console.log(this.rows);
+        viewRow(row) {
+            this.openModal(row, false);
+        },
+        openModal(row, isEditing) {
+            this.editingMode = isEditing;
+            axios.get(`/address/${row.id}`)
+                .then((res) => {
+                    this.selectedAddress = res.data;
+                    this.showModal = true;
+                    document.body.classList.add('modal-open');
+                    console.log(this.selectedAddress);
+                })
+                .catch((error) => {
+                    console.error('Error fetching adress data:', error);
+                });
+
+            this.showModal = true;
+            document.body.classList.add('modal-open');
         },
         deleteRow(rows) {
             const response = confirm("Are you sure you want to delete?");
             const rowIndex = this.rows.findIndex(item => item.id === rows.id);
             if (rowIndex !== -1 && response) {
+                axios.delete(`/address/${rows.id}`);
                 this.rows.splice(rowIndex, 1);
             }
-        }
+        },
+        closeModal() {
+            this.showModal = false;
+            document.body.classList.remove('modal-open');
+        },
     },
     created: function () {
         this.showAddresses()
